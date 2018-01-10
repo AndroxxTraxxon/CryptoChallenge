@@ -7,11 +7,11 @@
 #include "base16.h"
 
 string hex_encode(bytestring bytes){
-	size_t out_len = (bytes.length * 2);
+	size_t out_len = (bytes.get_length() * 2);
 	string output (out_len, (char) 0);
-	for(size_t i = 0, out_index = 0; i < bytes.length && out_index < out_len ; i++, out_index += 2){
-		output[out_index]     = (bytes.data[i] >> 4) & 0x0F;
-		output[out_index + 1] =  bytes.data[i]       & 0x0F;
+	for(size_t i = 0, out_index = 0; i < bytes.get_length() && out_index < out_len ; i++, out_index += 2){
+		output[out_index]     = (bytes.get_data()[i] >> 4) & 0x0F;
+		output[out_index + 1] =  bytes.get_data()[i]       & 0x0F;
 	}
 	for(size_t i = 0; i < out_len; i++){
 		if(output[i] < 10){
@@ -28,12 +28,12 @@ string hex_encode(bytestring bytes){
 
 bytestring hex_decode(string base16){
 	size_t out_len = base16.length() / 2 + (base16.length() % 2);
-	bytestring output = make_bytestring(out_len);
+	bytestring output = bytestring(out_len);
 	for(size_t i = 0; 2 * i < base16.length(); i++){
 			if (base16.length() - 2*i < 2){
-				output.data[i] = hex_char_to_bin(base16[2*i]);
+				output.get_data()[i] = hex_char_to_bin(base16[2*i]);
 			}else{
-				output.data[i] = hex_pair_to_byte(base16[2*i], base16[2*i+1]);
+				output.get_data()[i] = hex_pair_to_byte(base16[2*i], base16[2*i+1]);
 			}
 		}
 	return output;

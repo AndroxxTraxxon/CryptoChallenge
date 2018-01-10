@@ -20,16 +20,25 @@ typedef unsigned char byte;
 
 using namespace std;
 
-typedef struct bytestring{
+//typedef struct bytestring{
+//	byte * data;
+//	size_t length;
+//} bytearray;
+class bytestring{
 	byte * data;
 	size_t length;
-} bytearray;
+public:
 
-bytestring operator+ (bytestring a, bytestring b);
-bytestring operator^ (bytestring a, bytestring b);
-ostream& operator<< (ostream& os, bytestring b);
-bytestring make_bytestring(size_t l);
-bytestring make_bytestring(string str);
-bytestring sub_bytestring(bytestring b, size_t start, size_t len);
+	bytestring(size_t length);
+	bytestring(string str);
+	bytestring(byte * data, size_t length);
+	byte * get_data(void);
+	size_t get_length(void);
+	bytestring operator^ (bytestring a); // XOR
+	bytestring operator+ (bytestring a); // STRING CONCAT
+	ostream& operator<< (ostream& os);   // FOR PRINTING
+	bytestring substring(size_t start, size_t length);
+	string toString(void);
+};
 
 #endif /* BYTESTRING_H_ */

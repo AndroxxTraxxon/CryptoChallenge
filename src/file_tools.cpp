@@ -9,7 +9,9 @@
 #include <string>
 using namespace std;
 
-string readFile(string )
+string readFile(string filename){
+
+}
 
 
 

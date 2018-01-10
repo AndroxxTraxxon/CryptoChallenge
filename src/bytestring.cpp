@@ -7,52 +7,64 @@
 
 #include "bytestring.h"
 
-bytestring operator^ (bytestring a, bytestring b){
-	bytestring output = make_bytestring((a.length < b.length)?a.length:b.length);
+bytestring bytestring::operator^ (bytestring a){
+	bytestring output = bytestring((a.length < length)?a.length:length);
 	for(size_t i = 0; i < output.length; i++){
-		output.data[i] = a.data[i] ^ b.data[i];
+		output.data[i] = a.data[i] ^ data[i];
 	}
 	return output;
 }
 
-bytestring operator+ (bytestring a, bytestring b){
-	bytestring output = make_bytestring(a.length + b.length);
-	memcpy((void *)output.data, (void *) a.data, a.length);
-	memcpy((void *)(&output.data[a.length]),(void *)b.data, b.length);
+bytestring bytestring::operator+ (bytestring a){
+	bytestring output = bytestring(a.length + length);
+	memcpy((void *)output.data, (void *) data, length);
+	memcpy((void *)(&output.data[a.length]),(void *)a.data, a.length);
 	return output;
 }
 
-bytestring make_bytestring(size_t l){
-	bytestring output;
-	output.length = l;
-	output.data = (byte *) calloc(output.length, sizeof(byte));
+size_t bytestring::get_length(void){
+	return length;
+}
+
+byte* bytestring::get_data(void){
+	return data;
+}
+
+bytestring::bytestring(byte * dat, size_t len){
+	length = len;
+	data = dat;
+}
+
+bytestring::bytestring(size_t length){
+	this->length = length;
+	data = (byte *) calloc(length, sizeof(byte));
+}
+
+bytestring::bytestring(string str){
+	length = str.length();
+	data = (byte *) calloc(length, sizeof(byte));
+	memcpy((void *)data, (void *) str.data(), length);
+}
+
+bytestring bytestring::substring(size_t start, size_t len){
+	len = (len < length - start)?len:length - start;
+	bytestring output = bytestring(len);
+	memcpy((void *)output.data, (void *) (data + start), output.length);
 	return output;
 }
 
-bytestring make_bytestring(string str){
-	bytestring output = make_bytestring(str.length());
-	memcpy((void *)output.data, (void *) str.data(), output.length);
-	return output;
-}
-
-bytestring sub_bytestring(bytestring b, size_t start, size_t len){
-	bytestring output = make_bytestring(len);
-	memcpy((void *)output.data, (void *) (b.data + start), output.length);
-	return output;
-}
-
-string bytearray_to_string(bytestring b){
-	string str ((char *)b.data);
+string bytestring::toString(){
+	string str ((char *)data);
 	return str;
 }
 
-ostream& operator<< (ostream& os, bytestring b){
-	for(size_t i = 0; i < b.length; i++){
-		if(b.data[i] > 31 && b.data[i] != 127 &&
-				b.data[i] != 255 && b.data[i] != '&'){
-			os << ((char) (b.data[i]));
+ostream& bytestring::operator<< (ostream& os){
+	for(size_t i = 0; i < length; i++){
+		if(data[i] > 31 && data[i] != 127 &&
+				data[i] != 255 && data[i] != '&'){
+			os << ((char) (data[i]));
 		}else{
-			os << "&#" <<(unsigned short) b.data[i] <<";";
+			os << "&#" <<(unsigned short) data[i] <<";";
 		}
 	}
 	return os << endl;
